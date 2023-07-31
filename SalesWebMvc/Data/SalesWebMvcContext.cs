@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using SalesWebMvc.Data;
 
 namespace SalesWebMvc.Models
 {
@@ -17,10 +18,10 @@ namespace SalesWebMvc.Models
             return new SalesWebMvcContext(optionsBuilder.Options);
         }
     }
-
     public class SalesWebMvcContext : DbContext
     {
-        public SalesWebMvcContext (DbContextOptions<SalesWebMvcContext> options)
+        public SalesWebMvcContext(DbContextOptions<SalesWebMvcContext> options)
+            : base(options)
         {
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,7 +34,7 @@ namespace SalesWebMvc.Models
         }
 
         public DbSet<Department> Department { get; set; }
-        public DbSet<Seller> Sellers { get; set; }
+        public DbSet<Seller> Seller { get; set; }
         public DbSet<SalesRecord> SalesRecord { get; set; }
     }
 }
