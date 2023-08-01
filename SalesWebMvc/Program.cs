@@ -15,21 +15,6 @@ builder.Services.AddScoped<SeedingService>();
 
 var app = builder.Build();
 
-void Configures(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, SeedingService seedingService)
-{ 
-    // Configure the HTTP request pipeline.
-    if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-        seedingService.Seed();
-    }
-    else
-    {
-        app.UseExceptionHandler("/Home/Error");
-        app.UseHsts();
-    }
-}
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
