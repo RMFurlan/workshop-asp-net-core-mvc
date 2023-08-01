@@ -1,102 +1,76 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SalesWebMvc.Migrations
 {
-    /// <inheritdoc />
     public partial class OtherEntities : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_SalesRecord_Sellers_SellerId",
-                table: "SalesRecord");
+            migrationBuilder.CreateTable(
+                name: "Seller",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    BirthDate = table.Column<DateTime>(nullable: false),
+                    BaseSalary = table.Column<double>(nullable: false),
+                    DepartmentId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seller", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Seller_Department_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Department",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Sellers_Department_DepartmentId",
-                table: "Sellers");
+            migrationBuilder.CreateTable(
+                name: "SalesRecord",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Amount = table.Column<double>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    SellerId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalesRecord", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SalesRecord_Seller_SellerId",
+                        column: x => x.SellerId,
+                        principalTable: "Seller",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Sellers",
-                table: "Sellers");
-
-            migrationBuilder.RenameTable(
-                name: "Sellers",
-                newName: "Seller");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Sellers_DepartmentId",
-                table: "Seller",
-                newName: "IX_Seller_DepartmentId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Seller",
-                table: "Seller",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_SalesRecord_Seller_SellerId",
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesRecord_SellerId",
                 table: "SalesRecord",
-                column: "SellerId",
-                principalTable: "Seller",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                column: "SellerId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Seller_Department_DepartmentId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Seller_DepartmentId",
                 table: "Seller",
-                column: "DepartmentId",
-                principalTable: "Department",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                column: "DepartmentId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_SalesRecord_Seller_SellerId",
-                table: "SalesRecord");
+            migrationBuilder.DropTable(
+                name: "SalesRecord");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Seller_Department_DepartmentId",
-                table: "Seller");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Seller",
-                table: "Seller");
-
-            migrationBuilder.RenameTable(
-                name: "Seller",
-                newName: "Sellers");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Seller_DepartmentId",
-                table: "Sellers",
-                newName: "IX_Sellers_DepartmentId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Sellers",
-                table: "Sellers",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_SalesRecord_Sellers_SellerId",
-                table: "SalesRecord",
-                column: "SellerId",
-                principalTable: "Sellers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Sellers_Department_DepartmentId",
-                table: "Sellers",
-                column: "DepartmentId",
-                principalTable: "Department",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.DropTable(
+                name: "Seller");
         }
     }
 }

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
+using SalesWebMvc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +14,27 @@ options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 // Add services to the container. 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<SeedingService>();
+builder.Services.AddScoped<SellerService>();
 
 var app = builder.Build();
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var seedingService = serviceScope.ServiceProvider.GetService<SeedingService>();
+        seedingService.Seed();
+    }
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
 
 app.UseHttpsRedirection();
 

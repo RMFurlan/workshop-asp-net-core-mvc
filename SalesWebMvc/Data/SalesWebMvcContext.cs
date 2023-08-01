@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using System.Reflection.Emit;
+using static System.Net.Mime.MediaTypeNames;
+using SalesWebMvc.Models.Enums;
 
 namespace SalesWebMvc.Models
 {
@@ -23,24 +25,9 @@ namespace SalesWebMvc.Models
                 optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             }
         }
-        public void Configures(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, SeedingService seedingService)
-        {
-            // Configure the HTTP request pipeline.
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                seedingService.Seed();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-                seedingService.Seed();
-            }
-        }
-
-        public virtual DbSet<Department> Department { get; set; }
-        public virtual DbSet<Seller> Seller { get; set; }
-        public virtual DbSet<SalesRecord> SalesRecord { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<Seller> Seller { get; set; }
+        public DbSet<SalesRecord> SalesRecord { get; set; }
     }
 }
+
